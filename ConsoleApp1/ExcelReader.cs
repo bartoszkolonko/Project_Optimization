@@ -38,6 +38,9 @@ namespace ProjectOptimizationApp
                         activity.Id = Convert.ToInt32(item["Id"]);
                         activity.Description = item["Description"].ToString();
                         activity.Duration = Convert.ToInt32(item["Duration"]);
+                        activity.TerminalDuration = Convert.ToInt32(item["TerminalDuration"]);
+                        activity.Cost = Convert.ToInt32(item["Cost"]);
+                        activity.TerminalCost = Convert.ToInt32(item["TerminalCost"]);
                         activity.Predecessors = GetPredecessors(item["Predecessors"].ToString());
 
                         activities.Add(activity);
@@ -54,7 +57,7 @@ namespace ProjectOptimizationApp
 
             if(!string.IsNullOrEmpty(predecessorsString))
             {
-                predecessors = predecessorsString.Split(",").Select(int.Parse).ToList();
+                predecessors = predecessorsString.Split(";").Select(int.Parse).ToList();
             }
 
             return predecessors;
