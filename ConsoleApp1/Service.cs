@@ -92,7 +92,14 @@ namespace ProjectOptimizationApp
         {
             foreach (var act in list)
             {
-                act.AverageCostGradient = (act.TerminalCost - act.Cost) / (act.Duration - act.TerminalDuration);
+                if(act.Duration - act.TerminalDuration > 0)
+                {
+                    act.AverageCostGradient = (act.TerminalCost - act.Cost) / (act.Duration - act.TerminalDuration);
+                }
+                else
+                {
+                    act.AverageCostGradient = -1;
+                }
             }
 
             return list;
@@ -104,8 +111,10 @@ namespace ProjectOptimizationApp
 
             foreach (var workspaceItem in globals.currentNetworkState.OrderBy(x => x.AverageCostGradient).ToList())
             {
-                if (workspaceItem.IsCriticalPath)
+                if (workspaceItem.IsCriticalPath && workspaceItem.AverageCostGradient != -1)
                 {
+                    Console.WriteLine("Optimizing task with id = {0}", workspaceItem.Id);
+
                     ClearCalculations(globals.currentNetworkState);
 
                     workspaceItem.Duration = workspaceItem.TerminalDuration;
