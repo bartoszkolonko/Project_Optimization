@@ -14,10 +14,17 @@ namespace ProjectOptimizationApp
             Globals globals = Globals.GetState();
             var activitiesData = new List<Activity>();
 
+            Console.WriteLine("Podaj wysokość spodziewanych zysków: ");
+            globals.expectedEarnings = Convert.ToInt32(Console.ReadLine());
+
             activitiesData = ExcelReader.Read("test.xlsx");
 
-            globals.totalCost = activitiesData.Sum(x => x.Cost);
-            Console.WriteLine("TOTAL COST: {0}", globals.totalCost);
+            var totalCost = activitiesData.Sum(x => x.Cost);
+
+            globals.basicTotalCost = totalCost;
+            globals.currentTotalCost = totalCost;
+
+            Console.WriteLine("Pierwotny koszt projektu: {0}", globals.basicTotalCost);
             
             activitiesData = _service.SetSuccessors(activitiesData);
             activitiesData = _service.CalculateAhead(activitiesData);
@@ -32,6 +39,7 @@ namespace ProjectOptimizationApp
             }
 
             _service.Optimize(activitiesData);
+            Console.ReadKey();
         }
 
         private static T Clone<T>(T source)

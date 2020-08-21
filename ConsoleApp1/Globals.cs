@@ -5,7 +5,11 @@ namespace ProjectOptimizationApp
 {
     class Globals
     {
-        public int totalCost = 0;
+        public double expectedEarnings = 0.0;
+        public double basicTotalCost = 0.0;
+        public double currentTotalCost = 0.0;
+        public double basicTotalDuration = 0.0;
+        public double currentTotalDuration = 0.0;
         public List<Activity> currentNetworkState = new List<Activity>();
 
         private Globals() { }

@@ -1,6 +1,7 @@
 ﻿using ProjectOptimizationApp.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace ProjectOptimizationApp
@@ -75,17 +76,29 @@ namespace ProjectOptimizationApp
         }
 
         public void FindCriticalPath(List<Activity> list)
-        {            
+        {
+            Globals globals = Globals.GetState();
+
             foreach (Activity act in list)
             {
                 if ((act.EarliestEndTime - act.LatestEndTime == 0) && (act.EarliestStartTime - act.LatestStartTime == 0))
                 {
                     act.IsCriticalPath = true;
-                    Console.WriteLine("{0} ", act.Id);
+                    //Console.WriteLine("{0} ", act.Id);
                 }
             }
 
-            Console.WriteLine("Total Duration: {0}", list[list.Count - 1].EarliestEndTime);
+            int totalDuration = list[list.Count - 1].EarliestEndTime;
+
+            if (globals.basicTotalDuration == 0)
+            {
+                globals.basicTotalDuration = totalDuration;
+            }
+
+            globals.currentTotalDuration = totalDuration;
+
+            Console.WriteLine("Pierwotny czas trwania projektu: {0}", globals.basicTotalDuration);
+            Console.WriteLine("Obecny czas trwania projektu: {0}", globals.currentTotalDuration);
         }
 
         public List<Activity> CalculateAverageCostGradient(List<Activity> list)
@@ -113,7 +126,8 @@ namespace ProjectOptimizationApp
             {
                 if (workspaceItem.IsCriticalPath && workspaceItem.AverageCostGradient != -1)
                 {
-                    Console.WriteLine("Optimizing task with id = {0}", workspaceItem.Id);
+                    Console.WriteLine("\n");
+                    Console.WriteLine("Optymalizacja zadania o id = {0}", workspaceItem.Id);
 
                     ClearCalculations(globals.currentNetworkState);
 
@@ -125,9 +139,11 @@ namespace ProjectOptimizationApp
 
                     var originalAct = activitiesData.Where(x => x.Id == workspaceItem.Id).FirstOrDefault();
 
-                    globals.totalCost = globals.totalCost + (originalAct.Duration - originalAct.TerminalDuration) * originalAct.AverageCostGradient;
+                    globals.currentTotalCost += (originalAct.Duration - originalAct.TerminalDuration) * originalAct.AverageCostGradient;
 
-                    Console.WriteLine("Total cost: {0}", globals.totalCost);
+                    Console.WriteLine("Obecny koszt całkowity projektu: {0}", globals.currentTotalCost);
+
+                    CalculateEffectiveness();
                 }
             }
         }
@@ -141,6 +157,22 @@ namespace ProjectOptimizationApp
                 activity.LatestStartTime = 0;
                 activity.LatestEndTime = 0;
             }
+        }
+
+        private void CalculateEffectiveness()
+        {
+            Globals _globals = Globals.GetState();
+
+            var effectiveness = _globals.expectedEarnings / _globals.currentTotalCost;
+
+            double performance = _globals.basicTotalDuration / _globals.currentTotalDuration;
+
+            var costChange = (_globals.currentTotalCost / _globals.basicTotalCost) - 1;
+
+            Console.WriteLine("Efektywność projektu: {0}", Math.Round(effectiveness, 2));
+            Console.WriteLine("Wydajność projektu: {0}", Math.Round(performance, 2));
+            Console.WriteLine("Zmiana kosztu projektu względem pierwotnego kosztu: {0}", costChange.ToString("P", CultureInfo.InvariantCulture));
+            Console.WriteLine("\n");
         }
     }
 }
