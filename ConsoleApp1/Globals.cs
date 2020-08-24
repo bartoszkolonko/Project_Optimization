@@ -10,6 +10,7 @@ namespace ProjectOptimizationApp
         public double currentTotalCost = 0.0;
         public double basicTotalDuration = 0.0;
         public double currentTotalDuration = 0.0;
+        public List<int> criticalPath = new List<int>();
         public List<Activity> currentNetworkState = new List<Activity>();
 
         private Globals() { }

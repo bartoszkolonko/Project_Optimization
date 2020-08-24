@@ -17,9 +17,9 @@ namespace ProjectOptimizationApp
             Console.WriteLine("Podaj wysokość spodziewanych zysków: ");
             globals.expectedEarnings = Convert.ToInt32(Console.ReadLine());
 
-            activitiesData = ExcelReader.Read("test.xlsx");
+            activitiesData = ExcelReader.Read("dane.xlsx");
 
-            var totalCost = activitiesData.Sum(x => x.Cost);
+            var totalCost = activitiesData.Sum(x => x.Cost * x.Duration);
 
             globals.basicTotalCost = totalCost;
             globals.currentTotalCost = totalCost;
@@ -29,7 +29,14 @@ namespace ProjectOptimizationApp
             activitiesData = _service.SetSuccessors(activitiesData);
             activitiesData = _service.CalculateAhead(activitiesData);
             activitiesData = _service.CalculateBackwards(activitiesData);
-            _service.FindCriticalPath(activitiesData);          
+            _service.FindCriticalPath(activitiesData);
+
+            Console.WriteLine("Ścieżka krytyczna: ");
+            foreach(var actId in globals.criticalPath)
+            {
+                Console.Write("{0} ", actId);
+            }
+
             activitiesData = _service.CalculateAverageCostGradient(activitiesData);
 
             foreach (var item in activitiesData)
