@@ -17,6 +17,9 @@ namespace ProjectOptimizationApp
             Console.WriteLine("Podaj wysokość spodziewanych zysków: ");
             globals.expectedEarnings = Convert.ToInt32(Console.ReadLine());
 
+            Console.WriteLine("\n");
+
+            #region Wczytanie pliku
             activitiesData = ExcelReader.Read("dane.xlsx");
 
             var totalCost = activitiesData.Sum(x => x.Cost * x.Duration);
@@ -27,6 +30,10 @@ namespace ProjectOptimizationApp
             Console.WriteLine("Pierwotny koszt projektu: {0}", globals.basicTotalCost);
             
             activitiesData = _service.SetSuccessors(activitiesData);
+
+            #endregion
+
+            #region Diagram sieciowy i ścieżka krytyczna
             activitiesData = _service.CalculateAhead(activitiesData);
             activitiesData = _service.CalculateBackwards(activitiesData);
             _service.FindCriticalPath(activitiesData);
@@ -37,6 +44,9 @@ namespace ProjectOptimizationApp
                 Console.Write("{0} ", actId);
             }
 
+            #endregion
+
+            #region Optymalizacja
             activitiesData = _service.CalculateAverageCostGradient(activitiesData);
 
             foreach (var item in activitiesData)
@@ -47,6 +57,8 @@ namespace ProjectOptimizationApp
 
             _service.Optimize(activitiesData);
             Console.ReadKey();
+
+            #endregion
         }
 
         private static T Clone<T>(T source)

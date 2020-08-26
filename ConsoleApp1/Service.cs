@@ -128,6 +128,7 @@ namespace ProjectOptimizationApp
                 {
                     Console.WriteLine("\n");
                     Console.WriteLine("Optymalizacja zadania o id = {0}", workspaceItem.Id);
+                    Console.WriteLine("Gradient kosztu: {0}", workspaceItem.AverageCostGradient);
 
                     ClearCalculations(globals.currentNetworkState);
 
