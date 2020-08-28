@@ -173,7 +173,8 @@ namespace ProjectOptimizationApp
             var costChange = (_globals.currentTotalCost / _globals.basicTotalCost) - 1;
 
             Console.WriteLine("Efektywność projektu (stosunek spodziewanych zysków do kosztów projektu) : {0}", Math.Round(effectiveness, 2));
-            Console.WriteLine("Wydajność projektu (stosunek pierwotnego czasu trwania projektu do obecnego czasu trwania projektu): {0}", Math.Round(performance, 2));
+            Console.WriteLine("Wydajność projektu (stosunek pierwotnego czasu trwania projektu do obecnego czasu trwania projektu): {0}",
+                                                                                                                    Math.Round(performance, 2));
             Console.WriteLine("Zmiana kosztu projektu względem pierwotnego kosztu: {0}", costChange.ToString("P", CultureInfo.InvariantCulture));
             Console.WriteLine("\n");
         }
