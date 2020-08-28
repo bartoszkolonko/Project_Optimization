@@ -65,7 +65,9 @@ namespace ProjectOptimizationApp
                     else
                     {
                         if (list[i].LatestEndTime > act.LatestStartTime)
+                        {
                             list[i].LatestEndTime = act.LatestStartTime;
+                        }                         
                     }
                 }
 
